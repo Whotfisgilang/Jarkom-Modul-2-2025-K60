@@ -104,3 +104,5 @@
 	  address 192.241.4.5
 	  netmask 255.255.255.0
 	  gateway 192.241.4.1
+
+## Setup dan Instalasi
