@@ -10,7 +10,7 @@
 ## Setup dan Instalasi
 
 
-## Soal !
+## Soal 1
 pada soal ini, kita diminta untuk memmbuat topologi dengan tiga jalur, yaitu jalur Barat  untuk Earendil dan Elwing, Jalur Timur untuk Cirdan, Elrond, dan Maglor, serta pelabuhan DMZ bagi Sirion, Tirion, Valmar, Lindon, dan Vingilot. Setelah membuat topologi, kita diminta untuk menetapkan alamat dan default gateway tiap tokoh sesuai glosarium yang sudah diberikan.
 
 **Topologi**
@@ -135,4 +135,7 @@ nameserver 192.168.122.1
 
 - Untuk melakukan pengujian komunikasi lintas jalur, lakukan ping ke IP yang ingin dituju
 <img width="699" height="250" alt="image" src="https://github.com/user-attachments/assets/bdaf99cf-2113-4a30-b405-926decfcb884" />
+
+## Soal 4
+Pada soal ini, kita diminta untuk membuat record A untuk ns1.<xxxx>.com dan ns2.<xxxx>.com yang mengarah ke alamat Tirion dan Valmar sesuai glosarium, serta A record apex <xxxx>.com yang mengarah ke alamat Sirion (front door). Lalu, kita diminta untuk aktifkan notify dan allow-transfer ke Valmar, set forwarders ke 192.168.122.1. Di Valmar (ns2/slave) tarik zona <xxxx>.com dari Tirion dan pastikan menjawab authoritative. Pada seluruh host non-router ubah urutan resolver menjadi IP dari ns1.<xxxx>.com → ns2.<xxxx>.com → 192.168.122.1. Verifikasi query ke apex dan hostname layanan dalam zona dijawab melalui ns1/ns2.
 
