@@ -164,12 +164,12 @@ cat <<EOF > /etc/bind/named.conf.options
 ### Tirion
 - Buat direktori untuk menyimpan file zona DNS untuk domain [k55.com]
 ```
-mkdir -p /etc/bind/k55
+mkdir -p /etc/bind/k60
 ```
 
 - Untuk memulai proses pembuatan file teks baru dengan isi yang akan dimasukkan sampai baris EOF, lakukan perintah berikut
 ```
-cat <<EOF > /etc/bind/k55/k55.com
+cat <<EOF > /etc/bind/k60/k60.com
 ```
 
 - Beri izin server 192.241.3.4 (Valmar) menjadi slave DNS yang menerima pembaruan otomatis
@@ -191,18 +191,18 @@ echo "nameserver 192.168.122.1" >> /etc/resolv.conf
 
 - Tes apakah DNS server lokal sudah berjalan dengan benar
 ```
-dig @192.241.3.3 k55.com
+dig @192.241.3.3 k60.com
 ```
 
 ### Valmar
 - Buat direktori untuk menyimpan salinan dari file zona DNS utama
 ```
-mkdir -p /var/lib/bind/k55
+mkdir -p /var/lib/bind/k60
 ```
 
 - Ubah kepemilikan folder menjadi milik user dan grup bind
 ```
-chown bind:bind /var/lib/bind/k55
+chown bind:bind /var/lib/bind/k60
 ```
 
 - Tulis konfigurasi zona ke file /etc/bind/named.conf.local
@@ -236,7 +236,7 @@ echo "nameserver 192.168.122.1" >> /etc/resolv.conf
 #### Pada soal ini, kita diminta untuk membuat setiap domain untuk masing masing node sesuai dengan namanya dan assign IP masing-masing node. Lakukan pengecualian untuk node yang bertanggung jawab atas ns1 dan ns2
 - Menambahkan domain di masing masing node sesuai dengan namanya dan assign IP di masing masing node
 ```
-cat <<EOF >> /etc/bind/k55/k55.com
+cat <<EOF >> /etc/bind/k60/k60.com
 ```
 - Setiap kali mengubah konfigurasi DNS, lakukan perintah berikut memulai ulang service bind9
 ```
