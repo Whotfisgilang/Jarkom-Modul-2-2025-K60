@@ -249,11 +249,11 @@ service bind9 restart
 
 **Tirion**
 ```
-dig @192.241.3.3 k55.com SOA +short
+dig @192.241.3.3 k60.com SOA +short
 ```
 **Valmar**
 ```
-dig @192.241.3.4 k55.com SOA +short
+dig @192.241.3.4 k60.com SOA +short
 ```
 
 ## Soal 7 
