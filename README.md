@@ -10,8 +10,8 @@
 ## Setup dan Instalasi
 
 
-## Soal 1
-pada soal ini, kita diminta untuk memmbuat topologi dengan tiga jalur, yaitu jalur Barat  untuk Earendil dan Elwing, Jalur Timur untuk Cirdan, Elrond, dan Maglor, serta pelabuhan DMZ bagi Sirion, Tirion, Valmar, Lindon, dan Vingilot. Setelah membuat topologi, kita diminta untuk menetapkan alamat dan default gateway tiap tokoh sesuai glosarium yang sudah diberikan.
+# Soal 1
+#### Pada soal ini, kita diminta untuk memmbuat topologi dengan tiga jalur, yaitu jalur Barat  untuk Earendil dan Elwing, Jalur Timur untuk Cirdan, Elrond, dan Maglor, serta pelabuhan DMZ bagi Sirion, Tirion, Valmar, Lindon, dan Vingilot. Setelah membuat topologi, kita diminta untuk menetapkan alamat dan default gateway tiap tokoh sesuai glosarium yang sudah diberikan.
 
 **Topologi**
 <img width="1710" height="1112" alt="image" src="https://github.com/user-attachments/assets/58251ca9-7c86-4aa4-bfc3-6d4095f3ef8a" />
@@ -86,56 +86,152 @@ pada soal ini, kita diminta untuk memmbuat topologi dengan tiga jalur, yaitu jal
   ```bash
   auto eth0
   iface eth0 inet static
-	  address 192.241.4.2
+	  address 192.241.3.3
 	  netmask 255.255.255.0
-	  gateway 192.241.4.1
+	  gateway 192.241.3.1
 - Valmar
   ```bash
   auto eth0
   iface eth0 inet static
-	  address 192.241.4.3
+	  address 192.241.3.4
 	  netmask 255.255.255.0
-	  gateway 192.241.4.1
+	  gateway 192.241.3.1
 - Lindon
   ```bash
   auto eth0
   iface eth0 inet static
-	  address 192.241.4.4
+	  address 192.241.3.5
 	  netmask 255.255.255.0
-	  gateway 192.241.4.1
+	  gateway 192.241.3.1
 - Vingilot
   ```bash
   auto eth0
   iface eth0 inet static
-	  address 192.241.4.5
+	  address 192.241.3.6
 	  netmask 255.255.255.0
-	  gateway 192.241.4.1
+	  gateway 192.241.3.1
 
-## Soal 2
-Pada soal ini, kita diminta untuk memastikan jalur WAN router aktif dan NAT meneruskan trafik keluar bagi seluruh alamat internal sehingga host di dalam dapat mencapai layanan di luar menggunakan IP address.
+# Soal 2
+#### Pada soal ini, kita diminta untuk memastikan jalur WAN router aktif dan NAT meneruskan trafik keluar bagi seluruh alamat internal sehingga host di dalam dapat mencapai layanan di luar menggunakan IP address.
 
-- Agar dapat mengakses jalur WAN tambahkan di nameserver:
+- Agar dapat mengakses jalur WAN tambahkan nameserver di setiap nodes:
 ```
-nameserver 192.168.122.1
+echo "nameserver 192.168.122.1" > /etc/resolv.conf
 ```
-- Untuk meneruskan jalur WAN ke semua alamat internal, ketikkan kode berikut:
+- Untuk meneruskan jalur WAN ke semua alamat internal, lakukan perintah berikut:
 ```
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 192.241.0.0/16
 ```
 - Untuk melakukan pengujian di setiap alamat internal, lakukan ping google.com
+```
+ping google.com
+```
 <img width="953" height="253" alt="image" src="https://github.com/user-attachments/assets/2e9722a1-e085-4391-8137-99256a04eb08" />
 
-## Soal 3
-Pada soal ini, kami diminta untuk memastikan setiap klien bisa saling berkomunikasi lintas jalur (routing internal via Eonwe berfungsi), dan memastikan setiap host non-router menambahkan resolver 192.168.122.1.
+# Soal 3
+#### Pada soal ini, kami diminta untuk memastikan setiap klien bisa saling berkomunikasi lintas jalur (routing internal via Eonwe berfungsi), dan memastikan setiap host non-router menambahkan resolver 192.168.122.1.
 
-- Agar bisa setiap klien berkomunikasi lintas jalur, tambahkan nameserver di setiap IP
+- Agar bisa setiap klien berkomunikasi lintas jalur, cek apakah resolver sudah di tambahkan ke semua nodes
 ```
-nameserver 192.168.122.1
+cat /etc/resolv.conf
 ```
 
-- Untuk melakukan pengujian komunikasi lintas jalur, lakukan ping ke IP yang ingin dituju
+- Jika sudah ditambahkan, lakukan ping ke IP yang ingin dituju untuk melakukan pengujian komunikasi lintas jalur
+```
+ping 192.241.2.2
+```
 <img width="699" height="250" alt="image" src="https://github.com/user-attachments/assets/bdaf99cf-2113-4a30-b405-926decfcb884" />
 
-## Soal 4
-Pada soal ini, kita diminta untuk membuat record A untuk ns1.<xxxx>.com dan ns2.<xxxx>.com yang mengarah ke alamat Tirion dan Valmar sesuai glosarium, serta A record apex <xxxx>.com yang mengarah ke alamat Sirion (front door). Lalu, kita diminta untuk aktifkan notify dan allow-transfer ke Valmar, set forwarders ke 192.168.122.1. Di Valmar (ns2/slave) tarik zona <xxxx>.com dari Tirion dan pastikan menjawab authoritative. Pada seluruh host non-router ubah urutan resolver menjadi IP dari ns1.<xxxx>.com → ns2.<xxxx>.com → 192.168.122.1. Verifikasi query ke apex dan hostname layanan dalam zona dijawab melalui ns1/ns2.
+# Soal 4
+#### Pada soal ini, kita diminta untuk membuat record A untuk ns1.<xxxx>.com dan ns2.<xxxx>.com yang mengarah ke alamat Tirion dan Valmar sesuai glosarium, serta A record apex <xxxx>.com yang mengarah ke alamat Sirion (front door). Lalu, kita diminta untuk aktifkan notify dan allow-transfer ke Valmar, set forwarders ke 192.168.122.1. Di Valmar (ns2/slave) tarik zona <xxxx>.com dari Tirion dan pastikan menjawab authoritative. Pada seluruh host non-router ubah urutan resolver menjadi IP dari ns1.<xxxx>.com → ns2.<xxxx>.com → 192.168.122.1. Verifikasi query ke apex dan hostname layanan dalam zona dijawab melalui ns1/ns2.
+
+- Install server DNS untuk menghubungkannya
+```
+apt update
+apt install bind9 -y
+```
+- Agar lebih mudah, kami membuat link simbolik agar service named menunjuk ke bind9
+```
+ln -s /etc/init.d/named /etc/init.d/bind9
+```
+
+- Buat file konfigurasi utama BIND9 agar server DNS bisa menerima permintaan dari mana saja dan menereuskan query ke DNS (192.168.122.1)
+```
+cat <<EOF > /etc/bind/named.conf.options
+```
+**Lakukan perintah tersebut di nodes Tirion dan Valmar**
+
+**TIRION**
+- Buat direktori untuk menyimpan file zona DNS untuk domain [k55.com]
+```
+mkdir -p /etc/bind/k55
+```
+
+- Untuk memulai proses pembuatan file teks baru dengan isi yang akan dimasukkan sampai baris EOF, lakukan perintah berikut
+```
+cat <<EOF > /etc/bind/k55/k55.com
+```
+
+- Beri izin server 192.241.3.4 (Valmar) menjadi slave DNS yang menerima pembaruan otomatis
+```
+cat <<EOF > /etc/bind/named.conf.local
+```
+
+- Setiap kali mengubah konfigurasi DNS, lakuka perintah berikut memulai ulang service bind9
+```
+service bind9 restart
+```
+
+- Untuk mengatur DNS resolver sistem menjadi DNS lokal, lakukan perintah berikut
+```
+echo "nameserver 192.241.3.3" > /etc/resolv.conf 
+echo "nameserver 192.241.3.4" >> /etc/resolv.conf 
+echo "nameserver 192.168.122.1" >> /etc/resolv.conf
+```
+
+- Tes apakah DNS server lokal sudah berjalan dengan benar
+```
+dig @192.241.3.3 k55.com
+```
+
+**VALMAR**
+- Buat direktori untuk menyimpan salinan dari file zona DNS utama
+```
+mkdir -p /var/lib/bind/k55
+```
+
+- Ubah kepemilikan folder menjadi milik user dan grup bind
+```
+chown bind:bind /var/lib/bind/k55
+```
+
+- Tulis konfigurasi zona ke file /etc/bind/named.conf.local
+```
+cat <<EOF > /etc/bind/named.conf.local
+```
+
+- Untuk melihat konfigurasi zona DNS yang dijalankan oleh server BIND9, lakukan perintah berikut
+```
+cat named.conf.local
+```
+
+- Setiap kali mengubah konfigurasi DNS, lakuka perintah berikut memulai ulang service bind9
+```
+service bind9 restart
+```
+
+- Tes apakah DNS server lokal sudah berjalan dengan benar
+```
+dig @192.241.3.4 k55.com
+```
+
+- Lakukan perintah berikut ke semua node
+```
+echo "nameserver 192.241.3.3" > /etc/resolv.conf
+echo "nameserver 192.241.3.4" >> /etc/resolv.conf
+echo "nameserver 192.168.122.1" >> /etc/resolv.conf
+```
+
+# Soal 5
+#### Pada soal ini, kita diminta untuk membuat setiap domain untuk masing masing node sesuai dengan namanya dan assign IP masing-masing node. Lakukan pengecualian untuk node yang bertanggung jawab atas ns1 dan ns2
 
