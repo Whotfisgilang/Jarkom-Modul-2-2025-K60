@@ -161,7 +161,7 @@ cat <<EOF > /etc/bind/named.conf.options
 ```
 **Lakukan perintah tersebut di nodes Tirion dan Valmar**
 
-**TIRION**
+### Tirion
 - Buat direktori untuk menyimpan file zona DNS untuk domain [k55.com]
 ```
 mkdir -p /etc/bind/k55
@@ -177,7 +177,7 @@ cat <<EOF > /etc/bind/k55/k55.com
 cat <<EOF > /etc/bind/named.conf.local
 ```
 
-- Setiap kali mengubah konfigurasi DNS, lakuka perintah berikut memulai ulang service bind9
+- Setiap kali mengubah konfigurasi DNS, lakukan perintah berikut memulai ulang service bind9
 ```
 service bind9 restart
 ```
@@ -194,7 +194,7 @@ echo "nameserver 192.168.122.1" >> /etc/resolv.conf
 dig @192.241.3.3 k55.com
 ```
 
-**VALMAR**
+### Valmar
 - Buat direktori untuk menyimpan salinan dari file zona DNS utama
 ```
 mkdir -p /var/lib/bind/k55
@@ -215,7 +215,7 @@ cat <<EOF > /etc/bind/named.conf.local
 cat named.conf.local
 ```
 
-- Setiap kali mengubah konfigurasi DNS, lakuka perintah berikut memulai ulang service bind9
+- Setiap kali mengubah konfigurasi DNS, lakukan perintah berikut memulai ulang service bind9
 ```
 service bind9 restart
 ```
@@ -234,4 +234,25 @@ echo "nameserver 192.168.122.1" >> /etc/resolv.conf
 
 # Soal 5
 #### Pada soal ini, kita diminta untuk membuat setiap domain untuk masing masing node sesuai dengan namanya dan assign IP masing-masing node. Lakukan pengecualian untuk node yang bertanggung jawab atas ns1 dan ns2
+- Menambahkan domain di masing masing node sesuai dengan namanya dan assign IP di masing masing node
+```
+cat <<EOF >> /etc/bind/k55/k55.com
+```
+- Setiap kali mengubah konfigurasi DNS, lakukan perintah berikut memulai ulang service bind9
+```
+service bind9 restart
+```
+
+# Soal 6
+#### Pada soal ini, kita diminta untuk memastikan Valmar (ns2) telah menerima salinan zona terbaru dari Tirion (ns1) dan nilai serial SOA di keduanya harus sama
+- Memeriksa apakah DNS slave (192.241.3.4) sudah menyalin data dari master (192.241.3.3)
+
+**Tirion**
+```
+dig @192.241.3.3 k55.com SOA +short
+```
+**Valmar**
+```
+dig @192.241.3.4 k55.com SOA +short
+```
 
