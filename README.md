@@ -158,6 +158,20 @@ ln -s /etc/init.d/named /etc/init.d/bind9
 - Buat file konfigurasi utama BIND9 agar server DNS bisa menerima permintaan dari mana saja dan menereuskan query ke DNS (192.168.122.1)
 ```
 cat <<EOF > /etc/bind/named.conf.options
+options {
+  directory "/var/cache/bind";
+
+  forwarders {
+    192.168.122.1;
+  };
+
+  allow-query { any; };
+  auth-nxdomain no;
+  listen-on { any; };
+  listen-on-v6 { any; };
+};
+
+EOF
 ```
 **Lakukan perintah tersebut di nodes Tirion dan Valmar**
 
@@ -170,11 +184,36 @@ mkdir -p /etc/bind/k60
 - Untuk memulai proses pembuatan file teks baru dengan isi yang akan dimasukkan sampai baris EOF, lakukan perintah berikut
 ```
 cat <<EOF > /etc/bind/k60/k60.com
+\$TTL    604800          ; Waktu cache default (detik)
+@       IN      SOA     ns1.k55.com. root.k60.com. (
+                        2025100401 ; Serial (format YYYYMMDDXX)
+                        604800     ; Refresh (1 minggu)
+                        86400      ; Retry (1 hari)
+                        2419200    ; Expire (4 minggu)
+                        604800 )   ; Negative Cache TTL
+
+@        IN      NS     ns1.k55.com.
+@        IN      NS     ns2.k55.com.
+
+ns1     IN       A      192.241.3.3
+ns2     IN       A      192.241.3.4
+
+@       IN       A      192.241.3.2
+
+EOF
 ```
 
 - Beri izin server 192.241.3.4 (Valmar) menjadi slave DNS yang menerima pembaruan otomatis
 ```
 cat <<EOF > /etc/bind/named.conf.local
+zone "k60.com" {
+  type master;
+  file "/etc/bind/k60/k60.com";
+  allow-transfer { 192.241.3.4; };
+  notify yes;
+};
+
+EOF
 ```
 
 - Setiap kali mengubah konfigurasi DNS, lakukan perintah berikut memulai ulang service bind9
@@ -208,6 +247,13 @@ chown bind:bind /var/lib/bind/k60
 - Tulis konfigurasi zona ke file /etc/bind/named.conf.local
 ```
 cat <<EOF > /etc/bind/named.conf.local
+zone "k55.com" {
+  type slave;
+  masters { 10.91.3.3; };
+  file "/var/lib/bind/k55/k55.com";
+};
+
+EOF
 ```
 
 - Untuk melihat konfigurasi zona DNS yang dijalankan oleh server BIND9, lakukan perintah berikut
@@ -237,6 +283,16 @@ echo "nameserver 192.168.122.1" >> /etc/resolv.conf
 - Menambahkan domain di masing masing node sesuai dengan namanya dan assign IP di masing masing node
 ```
 cat <<EOF >> /etc/bind/k60/k60.com
+earendil       IN       A      192.241.1.2
+elwing         IN       A      192.241.1.3
+cirdan         IN       A      192.241.2.2
+elrond         IN       A      192.241.2.3
+maglor         IN       A      192.241.2.4
+sirion         IN       A      192.241.3.2
+lindon         IN       A      192.241.3.5
+vingilot       IN       A      192.241.3.6
+
+EOF
 ```
 - Setiap kali mengubah konfigurasi DNS, lakukan perintah berikut memulai ulang service bind9
 ```
